@@ -14,14 +14,11 @@
         <h2>Add New Product</h2>
 
         <form id="add-product-form">
-            <input type="text" id="productName" placeholder="Product Title" required>
-            <input type="number" id="productPrice" placeholder="Price" required>
-            <input type="text" id="productImage" placeholder="Image URL" required>
-
+            <input type="text" id="product-title" placeholder="Product Title" required>
+            <input type="number" id="product-price" placeholder="Price" required>
+            <input type="text" id="product-image" placeholder="Image URL" required>
             <button type="submit">Add Product</button>
         </form>
-
-        <p id="success-message" style="color: green;"></p>
 
         <h2>Manage Products</h2>
         <div id="admin-product-list"></div>
@@ -29,6 +26,7 @@
 
     <!-- Firebase v8 CDN -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
     <!-- Your JS Files -->
