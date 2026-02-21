@@ -41,5 +41,13 @@ function loadProducts() {
     });
   });
 }
+// Handle Form Submit (Admin Panel)
+const form = document.getElementById("add-product-form");
 
+if (form) {
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // prevent page reload
+    addProduct();
+  });
+}
 loadProducts();
