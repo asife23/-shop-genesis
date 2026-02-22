@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - Shop Genesis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
+<header class="admin-header">
     <h1>Admin Dashboard</h1>
     <a href="index.html">Back to Shop</a>
 </header>
@@ -30,27 +31,98 @@
     </div>
 </section>
 
-<section>
+<section class="admin-section">
     <h2>Add Product</h2>
     <form id="add-product-form">
-        <input type="text" id="product-title" placeholder="Title" required>
+        <input type="text" id="product-title" placeholder="Product Title" required>
         <input type="number" id="product-price" placeholder="Price" required>
         <input type="text" id="product-image" placeholder="Image URL" required>
         <button type="submit">Add Product</button>
     </form>
 </section>
 
-<section>
+<section class="admin-section">
     <h2>Orders</h2>
     <div id="admin-orders"></div>
 </section>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script type="module">
 
-<script src="firebase.js"></script>
-<script src="script.js"></script>
+import { auth, db } from "./firebase.js";
+import { 
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+import {
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
+/* 🔐 ADMIN LOGIN PROTECTION */
+onAuthStateChanged(auth, (user) => {
+    if (!user || user.email !== "sr0632890@gmail.com") {
+        alert("Access Denied!");
+        window.location.href = "login.html";
+    }
+});
+
+
+/* ➕ ADD PRODUCT */
+const form = document.getElementById("add-product-form");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById("product-title").value;
+    const price = document.getElementById("product-price").value;
+    const image = document.getElementById("product-image").value;
+
+    await addDoc(collection(db, "products"), {
+        title,
+        price,
+        image
+    });
+
+    alert("Product Added!");
+    form.reset();
+});
+
+
+/* 📦 LOAD ORDERS */
+async function loadOrders() {
+    const querySnapshot = await getDocs(collection(db, "orders"));
+
+    let total = 0;
+    let sales = 0;
+    let pending = 0;
+    let delivered = 0;
+
+    querySnapshot.forEach((docSnap) => {
+        total++;
+
+        const data = docSnap.data();
+
+        if (data.status === "Delivered") {
+            delivered++;
+            sales += parseFloat(data.total);
+        } else {
+            pending++;
+        }
+    });
+
+    document.getElementById("total-orders").innerText = total;
+    document.getElementById("total-sales").innerText = "৳ " + sales;
+    document.getElementById("pending-orders").innerText = pending;
+    document.getElementById("delivered-orders").innerText = delivered;
+}
+
+loadOrders();
+
+</script>
 
 </body>
 </html>
