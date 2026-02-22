@@ -1,1 +1,69 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Genesis</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body class="bg-gray-100">
+
+<!-- Navbar -->
+<header class="bg-white shadow-md p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-green-600">Shop Genesis</h1>
+    <div>
+        <a href="login.html" class="mr-4 text-gray-600 hover:text-green-600">Login</a>
+        <a href="admin.html" class="bg-green-600 text-white px-4 py-2 rounded-lg">Admin</a>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-center py-20">
+    <h2 class="text-4xl font-bold mb-4">Premium Quality Products</h2>
+    <p class="mb-6">Fast Delivery | Cash On Delivery | Trusted Store</p>
+    <button class="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">Shop Now</button>
+</section>
+
+<!-- Featured Section -->
+<section class="p-8">
+    <h2 class="text-2xl font-bold mb-6 text-center">Featured Products</h2>
+    <div id="product-list" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Products Load Here -->
+    </div>
+</section>
+
+<!-- Cart Section -->
+<section class="bg-white p-6 m-8 rounded-xl shadow-lg">
+    <h2 class="text-xl font-bold mb-4">Your Cart</h2>
+    <div id="cart-items"></div>
+    <h3 class="mt-4 font-semibold">Total: ৳ <span id="cart-total">0</span></h3>
+</section>
+
+<!-- Checkout -->
+<section class="bg-white p-6 m-8 rounded-xl shadow-lg">
+    <h2 class="text-xl font-bold mb-4">Checkout</h2>
+    <form id="checkout-form" class="space-y-4">
+        <input type="text" placeholder="Full Name" required class="w-full p-3 border rounded-lg">
+        <input type="text" placeholder="Phone Number" required class="w-full p-3 border rounded-lg">
+        <input type="text" placeholder="Address" required class="w-full p-3 border rounded-lg">
+
+        <select class="w-full p-3 border rounded-lg">
+            <option>Cash On Delivery</option>
+            <option>bKash</option>
+        </select>
+
+        <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition">
+            Place Order
+        </button>
+    </form>
+</section>
+
+<script src="firebase.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
