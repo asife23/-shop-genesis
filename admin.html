@@ -1,47 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="container">
 
-        <h1>Admin Dashboard</h1>
-        <button onclick="logout()">Logout</button>
-        <a href="index.html">← Go to Shop</a>
+<header>
+    <h1>Admin Dashboard</h1>
+    <a href="index.html">Back to Shop</a>
+</header>
 
-        <hr>
-
-        <h2>Add New Product</h2>
-        <form id="add-product-form">
-            <input type="text" id="product-title" placeholder="Product Title" required>
-            <input type="number" id="product-price" placeholder="Price" required>
-            <input type="text" id="product-image" placeholder="Image URL" required>
-            <button type="submit">Add Product</button>
-        </form>
-
-        <hr>
-
-        <h2>All Products</h2>
-        <div id="admin-product-list"></div>
-
-        <hr>
-
-        <h2>All Orders</h2>
-        <div id="admin-order-list"></div>
-
+<section class="admin-stats">
+    <div class="card">
+        <h3>Total Orders</h3>
+        <p id="total-orders">0</p>
     </div>
+    <div class="card">
+        <h3>Total Sales</h3>
+        <p id="total-sales">0</p>
+    </div>
+    <div class="card">
+        <h3>Pending</h3>
+        <p id="pending-orders">0</p>
+    </div>
+    <div class="card">
+        <h3>Delivered</h3>
+        <p id="delivered-orders">0</p>
+    </div>
+</section>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<section>
+    <h2>Add Product</h2>
+    <form id="add-product-form">
+        <input type="text" id="product-title" placeholder="Title" required>
+        <input type="number" id="product-price" placeholder="Price" required>
+        <input type="text" id="product-image" placeholder="Image URL" required>
+        <button type="submit">Add Product</button>
+    </form>
+</section>
 
-    <script src="firebase.js"></script>
-    <script src="script.js"></script>
+<section>
+    <h2>Orders</h2>
+    <div id="admin-orders"></div>
+</section>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script src="firebase.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
