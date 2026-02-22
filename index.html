@@ -1,153 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Shop Genesis</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Shop Genesis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Premium Dropshipping Store in Bangladesh">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
+<header>
+  <div class="logo">Shop Genesis</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Admin</a>
+  </nav>
+</header>
 
-    <header>
-        <h1>Shop Genesis</h1>
-        <div id="user-info"></div>
-        <button onclick="logout()">Logout</button>
-    </header>
+<section class="hero">
+  <h1>Welcome to Shop Genesis</h1>
+  <p>Premium Quality Products | Fast Delivery | Trusted Service</p>
+  <a href="#products" class="btn">Shop Now</a>
+</section>
 
-    <!-- LOGIN / REGISTER -->
-    <section id="auth-section">
-        <h2>Login / Register</h2>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="register()">Register</button>
-        <button onclick="login()">Login</button>
-    </section>
+<section id="products">
+  <h2>🔥 Trending Products</h2>
+  <div id="product-list" class="product-grid"></div>
+</section>
 
-    <!-- SHOP SECTION -->
-    <main id="shop-section" style="display:none;">
+<section id="cart-section">
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <p>Total: ৳ <span id="cart-total">0</span></p>
+</section>
 
-        <section id="products">
-            <h2>Products</h2>
-            <div id="product-list"></div>
-        </section>
+<section id="checkout">
+  <h2>Checkout</h2>
+  <form id="checkout-form">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="tel" id="phone" placeholder="Phone Number" required>
+    <input type="text" id="address" placeholder="Shipping Address" required>
 
-        <section id="cart">
-            <h2>Your Cart</h2>
-            <ul id="cart-items"></ul>
-            <p id="cart-total">Total: $0</p>
-        </section>
+    <select id="payment-method">
+      <option value="Cash On Delivery">Cash On Delivery</option>
+      <option value="bKash">bKash</option>
+      <option value="Nagad">Nagad</option>
+    </select>
 
-        <section id="checkout">
-            <h2>Checkout</h2>
-            <input type="text" id="name" placeholder="Full Name">
-            <input type="text" id="phone" placeholder="Phone">
-            <input type="text" id="address" placeholder="Address">
+    <button type="submit" class="btn">Place Order</button>
+  </form>
+</section>
 
-            <select id="payment">
-                <option value="COD">Cash On Delivery</option>
-                <option value="bKash">bKash</option>
-            </select>
+<footer>
+  <p>© 2026 Shop Genesis | All Rights Reserved</p>
+</footer>
 
-            <button onclick="placeOrder()">Place Order</button>
-        </section>
-
-    </main>
-
-</div>
-
-<!-- Firebase CDN -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
 <script src="firebase.js"></script>
-
-<script>
-
-let cart = [];
-let total = 0;
-
-// AUTH STATE
-firebase.auth().onAuthStateChanged(user => {
-    if(user){
-        document.getElementById("auth-section").style.display = "none";
-        document.getElementById("shop-section").style.display = "block";
-        document.getElementById("user-info").innerHTML = user.email;
-
-        checkRole(user.uid);
-    } else {
-        document.getElementById("auth-section").style.display = "block";
-        document.getElementById("shop-section").style.display = "none";
-    }
-});
-
-// REGISTER
-function register(){
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    firebase.auth().createUserWithEmailAndPassword(email,password)
-    .then(userCredential => {
-
-        db.collection("users").doc(userCredential.user.uid).set({
-            email: email,
-            role: "user"
-        });
-
-        alert("Registered Successfully");
-
-    }).catch(err => alert(err.message));
-}
-
-// LOGIN
-function login(){
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    firebase.auth().signInWithEmailAndPassword(email,password)
-    .catch(err => alert(err.message));
-}
-
-// LOGOUT
-function logout(){
-    firebase.auth().signOut();
-}
-
-// CHECK ROLE
-function checkRole(uid){
-    db.collection("users").doc(uid).get().then(doc => {
-        if(doc.data().role === "admin"){
-            window.location.href = "admin.html";
-        }
-    });
-}
-
-// PLACE ORDER
-function placeOrder(){
-
-    const user = firebase.auth().currentUser;
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const address = document.getElementById("address").value;
-    const payment = document.getElementById("payment").value;
-
-    db.collection("orders").add({
-        userId: user.uid,
-        name: name,
-        phone: phone,
-        address: address,
-        paymentMethod: payment,
-        total: total,
-        status: "Pending",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    alert("Order Placed Successfully!");
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
