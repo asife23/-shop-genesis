@@ -2,57 +2,152 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Shop</title>
+    <title>Shop Genesis</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>Our Shop</h1>
-            <nav>
-                <a href="admin.html">Admin Panel</a>
-            </nav>
-        </header>
 
-        <main>
-            <section id="products">
-                <h2>Products</h2>
-                <div id="product-list"></div>
-            </section>
+<div class="container">
 
-            <section id="cart">
-                <h2>Your Cart</h2>
-                <ul id="cart-items"></ul>
-                <p id="cart-total">Total: $0.00</p>
-            </section>
+    <header>
+        <h1>Shop Genesis</h1>
+        <div id="user-info"></div>
+        <button onclick="logout()">Logout</button>
+    </header>
 
-            <section id="checkout">
-                <h2>Checkout</h2>
-                <form id="checkout-form">
-                    <input type="text" id="name" placeholder="Full Name" required>
-                    <input type="tel" id="phone" placeholder="Phone Number" required>
-                    <input type="text" id="address" placeholder="Shipping Address" required>
-                    <button type="submit">Place Order</button>
-                </form>
-            </section>
+    <!-- LOGIN / REGISTER -->
+    <section id="auth-section">
+        <h2>Login / Register</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="register()">Register</button>
+        <button onclick="login()">Login</button>
+    </section>
 
-            <section id="payment-methods" style="display: none;">
-                <h3>Choose Payment Method (Demo)</h3>
-                <button>Pay with bKash</button>
-                <button>Pay with Nagad</button>
-            </section>
-        </main>
-    </div>
+    <!-- SHOP SECTION -->
+    <main id="shop-section" style="display:none;">
 
-    <!-- Firebase v8 CDN -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+        <section id="products">
+            <h2>Products</h2>
+            <div id="product-list"></div>
+        </section>
 
-    <!-- Your JS Files -->
-    <script src="firebase.js"></script>
-    <script src="script.js"></script>
+        <section id="cart">
+            <h2>Your Cart</h2>
+            <ul id="cart-items"></ul>
+            <p id="cart-total">Total: $0</p>
+        </section>
+
+        <section id="checkout">
+            <h2>Checkout</h2>
+            <input type="text" id="name" placeholder="Full Name">
+            <input type="text" id="phone" placeholder="Phone">
+            <input type="text" id="address" placeholder="Address">
+
+            <select id="payment">
+                <option value="COD">Cash On Delivery</option>
+                <option value="bKash">bKash</option>
+            </select>
+
+            <button onclick="placeOrder()">Place Order</button>
+        </section>
+
+    </main>
+
+</div>
+
+<!-- Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script src="firebase.js"></script>
+
+<script>
+
+let cart = [];
+let total = 0;
+
+// AUTH STATE
+firebase.auth().onAuthStateChanged(user => {
+    if(user){
+        document.getElementById("auth-section").style.display = "none";
+        document.getElementById("shop-section").style.display = "block";
+        document.getElementById("user-info").innerHTML = user.email;
+
+        checkRole(user.uid);
+    } else {
+        document.getElementById("auth-section").style.display = "block";
+        document.getElementById("shop-section").style.display = "none";
+    }
+});
+
+// REGISTER
+function register(){
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    firebase.auth().createUserWithEmailAndPassword(email,password)
+    .then(userCredential => {
+
+        db.collection("users").doc(userCredential.user.uid).set({
+            email: email,
+            role: "user"
+        });
+
+        alert("Registered Successfully");
+
+    }).catch(err => alert(err.message));
+}
+
+// LOGIN
+function login(){
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    firebase.auth().signInWithEmailAndPassword(email,password)
+    .catch(err => alert(err.message));
+}
+
+// LOGOUT
+function logout(){
+    firebase.auth().signOut();
+}
+
+// CHECK ROLE
+function checkRole(uid){
+    db.collection("users").doc(uid).get().then(doc => {
+        if(doc.data().role === "admin"){
+            window.location.href = "admin.html";
+        }
+    });
+}
+
+// PLACE ORDER
+function placeOrder(){
+
+    const user = firebase.auth().currentUser;
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+    const payment = document.getElementById("payment").value;
+
+    db.collection("orders").add({
+        userId: user.uid,
+        name: name,
+        phone: phone,
+        address: address,
+        paymentMethod: payment,
+        total: total,
+        status: "Pending",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert("Order Placed Successfully!");
+}
+
+</script>
 
 </body>
 </html>
